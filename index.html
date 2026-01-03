@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<title>FREE MONY 💸</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {
+    background: black;
+    color: #00ff66;
+    font-family: monospace;
+    text-align: center;
+    margin: 0;
+    overflow: hidden;
+  }
+  h1 {
+    margin-top: 20vh;
+    font-size: 3rem;
+  }
+  button {
+    font-size: 1.4rem;
+    padding: 16px 30px;
+    margin-top: 30px;
+    background: #00ff66;
+    border: none;
+    cursor: pointer;
+  }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    color: red;
+    display: none;
+    z-index: 999;
+    padding-top: 20vh;
+    font-size: 1.5rem;
+  }
+  .popup {
+    position: fixed;
+    background: #111;
+    border: 2px solid red;
+    color: white;
+    padding: 20px;
+    width: 260px;
+    z-index: 998;
+  }
+  .exit {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: #444;
+    color: white;
+    font-size: 12px;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+</style>
+</head>
+<body>
+
+<h1>💸 FREE MONY 💸</h1>
+<p>100 % legit. Ingen scam. Lovar.</p>
+<button onclick="startPrank()">CLICK HERE</button>
+
+<div id="overlay" class="overlay">
+  ⚠️ SYSTEM COMPROMISED ⚠️<br><br>
+  Uploading files...<br>
+  Accessing camera...<br>
+  Sending data...<br><br>
+  😂😂😂
+</div>
+
+<div class="exit" onclick="stopPrank()">STOPP PRANK</div>
+
+<script>
+let popups = [];
+let tabs = [];
+
+function startPrank() {
+
+  // 1️⃣ Åpne Rickroll-tabs (så mange som browseren tillater)
+  for (let i = 0; i < 5; i++) {
+    const tab = window.open(
+      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "_blank"
+    );
+    if (tab) tabs.push(tab);
+  }
+
+  // 2️⃣ Fake hacker-overlay
+  document.getElementById("overlay").style.display = "block";
+
+  // 3️⃣ Fake popup-vinduer (HTML, ikke browser popups)
+  for (let i = 0; i < 4; i++) {
+    const p = document.createElement("div");
+    p.className = "popup";
+    p.style.top = Math.random() * 70 + "vh";
+    p.style.left = Math.random() * 70 + "vw";
+    p.innerHTML = `
+      <b>⚠️ WARNING</b><br><br>
+      Virus detected!<br>
+      Sending data...<br><br>
+      <button onclick="this.parentElement.remove()">X</button>
+    `;
+    document.body.appendChild(p);
+    popups.push(p);
+  }
+}
+
+// 🛑 PANIC EXIT
+function stopPrank() {
+  document.getElementById("overlay").style.display = "none";
+  popups.forEach(p => p.remove());
+  popups = [];
+  alert("😇 Prank ferdig. Du er trygg.");
+}
+
+// ESC = STOPP
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") stopPrank();
+});
+</script>
+
+</body>
+</html>
