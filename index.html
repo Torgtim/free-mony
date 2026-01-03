@@ -100,7 +100,7 @@ function startShaking(){document.body.classList.add("shaking"); clearInterval(sh
 function fakeLoading(){let progress=0; const bar=document.getElementById("bar"),status=document.getElementById("statusText"),ipText=document.getElementById("ipText"); ipText.innerHTML=""; clearInterval(progressTimer);
   progressTimer=setInterval(()=>{progress+=Math.random()*9; if(progress>=100){progress=100; clearInterval(progressTimer);
   const fakeIP=Math.floor(Math.random()*200+20)+"."+Math.floor(Math.random()*200)+"."+Math.floor(Math.random()*200)+"."+Math.floor(Math.random()*200);
-  status.innerHTML="Uploading files… 100%<br><br>📡 Locating IP…"; ipText.innerHTML=`<br>IP funnet: <b>${fakeIP}</b><br>(😂 bare tull)`;}
+  status.innerHTML="Uploading files… 100%<br><br>📡 Locating IP…"; ipText.innerHTML=`<br>IP funnet: <b>${fakeIP}</b><br>(😂100% bare tull)`;}
   bar.style.width=progress+"%"; status.innerHTML=`Uploading files… ${Math.floor(progress)}%`;},220);
 }
 
