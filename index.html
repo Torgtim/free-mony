@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -16,89 +17,16 @@
   }
   h1 { margin-top: 10vh; font-size: 3rem; }
   p { opacity: .9; }
-  .btn {
-    font-size: 1.2rem;
-    padding: 14px 26px;
-    margin: 10px;
-    background: #00ff66;
-    border: none;
-    cursor: pointer;
-  }
-  .red-btn {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.8rem;
-    padding: 24px 40px;
-    background: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-    z-index: 1001;
-    border-radius: 12px;
-  }
-  #counter {
-    font-size: 2rem;
-    margin-top: 20px;
-    cursor: pointer;
-  }
-  #rickOverlay {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.96);
-    color: #ff4d4d;
-    display: none;
-    z-index: 999;
-    padding-top: 10vh;
-    font-size: 1.2rem;
-  }
-  .bar-wrap {
-    width: 70%;
-    margin: 20px auto;
-    border: 2px solid #ff4d4d;
-    height: 22px;
-  }
-  .bar {
-    height: 100%;
-    width: 0%;
-    background: #ff4d4d;
-  }
-  .popup {
-    position: fixed;
-    background: #111;
-    border: 2px solid #ff4d4d;
-    color: white;
-    padding: 16px;
-    width: 280px;
-    z-index: 998;
-    transition: transform .15s linear;
-  }
-  .exit {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    background: #444;
-    color: white;
-    font-size: 12px;
-    padding: 8px;
-    cursor: pointer;
-    z-index: 1000;
-  }
-  @keyframes shake {
-    0% { transform: translate(0,0); }
-    20% { transform: translate(-8px, 4px); }
-    40% { transform: translate(8px, -4px); }
-    60% { transform: translate(-8px, -4px); }
-    80% { transform: translate(8px, 4px); }
-    100% { transform: translate(0,0); }
-  }
+  .btn { font-size: 1.2rem; padding: 14px 26px; margin: 10px; background: #00ff66; border: none; cursor: pointer; }
+  .red-btn { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.8rem; padding: 24px 40px; background: red; color: white; border: none; cursor: pointer; z-index: 1001; border-radius: 12px; }
+  #counter { font-size: 2rem; margin-top: 20px; cursor: pointer; }
+  #rickOverlay { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.96); color: #ff4d4d; display: none; z-index: 999; padding-top: 10vh; font-size: 1.2rem; }
+  .bar-wrap { width: 70%; margin: 20px auto; border: 2px solid #ff4d4d; height: 22px; }
+  .bar { height: 100%; width: 0%; background: #ff4d4d; }
+  .popup { position: fixed; background: #111; border: 2px solid #ff4d4d; color: white; padding: 16px; width: 280px; z-index: 998; transition: transform .15s linear; }
+  .exit { position: fixed; bottom: 10px; right: 10px; background: #444; color: white; font-size: 12px; padding: 8px; cursor: pointer; z-index: 1000; }
+  @keyframes shake { 0%{transform:translate(0,0);}20%{transform:translate(-8px,4px);}40%{transform:translate(8px,-4px);}60%{transform:translate(-8px,-4px);}80%{transform:translate(8px,4px);}100%{transform:translate(0,0);} }
   .shaking { animation: shake .12s infinite; }
 </style>
 </head>
@@ -111,186 +39,99 @@
 <button class="btn" onclick="startPrank(6)">DOUBLE MONY</button>
 <button class="btn" onclick="startPrank(12)">ULTRA FREE</button>
 
-<!-- TOTAL MONY -->
 <button class="red-btn" onclick="ultimateChaos()">💥 TOTAL MONY 💥</button>
 
-<!-- Counter -->
 <div id="counter" onclick="counterClicked()">0</div>
 <div id="rickOverlay"></div>
 
 <div id="overlay" class="overlay">
-  <div id="statusText">
-    ⚠️ SYSTEM COMPROMISED ⚠️<br><br>
-    Initializing exploit…
-  </div>
-
-  <div class="bar-wrap">
-    <div id="bar" class="bar"></div>
-  </div>
-
+  <div id="statusText">⚠️ SYSTEM COMPROMISED ⚠️<br><br>Initializing exploit…</div>
+  <div class="bar-wrap"><div id="bar" class="bar"></div></div>
   <div id="ipText"></div>
-
   <div style="margin-top:18px;">
-    <iframe id="rickframe"
-      width="320" height="180"
-      src=""
-      title="Rickroll"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
+    <iframe id="rickframe" width="320" height="180" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
 </div>
 
 <div class="exit" onclick="stopPrank()">STOPP PRANK</div>
 
 <script>
-let popups = [];
-let progressTimer = null;
-let shakeTimer = null;
-let counterValue = 0;
-let counterInterval = null;
+let popups=[],progressTimer=null,shakeTimer=null,counterValue=0,counterInterval=null,startStopClicks=0;
 
-// 🟢 Standard mony-knapper
-function startPrank(rickCount) {
-  for (let i=0;i<rickCount;i++) window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ","_blank");
+// Mony-knapper
+function startPrank(rickCount){
+  for(let i=0;i<rickCount;i++) window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ","_blank");
   document.getElementById("overlay").style.display="block";
   document.getElementById("rickframe").src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
-  createPopups(5);
-  startShaking();
-  fakeLoading();
+  createPopups(5); startShaking(); fakeLoading();
 }
 
-// 🔴 Rød knapp – TOTAL CHAOS
-function ultimateChaos() {
+// TOTAL MONY rød knapp
+function ultimateChaos(){
   document.getElementById("overlay").style.display="block";
   document.getElementById("rickframe").src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
-  createPopups(20);
-  document.body.classList.add("shaking");
-  clearInterval(shakeTimer);
-  shakeTimer=setInterval(()=>{document.body.classList.toggle("shaking")},60);
+  createPopups(20); document.body.classList.add("shaking");
+  clearInterval(shakeTimer); shakeTimer=setInterval(()=>{document.body.classList.toggle("shaking")},60);
   for(let i=0;i<10;i++) window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ","_blank");
   fakeLoading();
 }
 
-// 🐭 Popups som løper fra musen
+// Popups løper fra musen
 document.addEventListener("mousemove", e => {
   popups.forEach(p => {
-    const r = p.getBoundingClientRect();
-    const cx = r.left+r.width/2;
-    const cy = r.top+r.height/2;
-    const dx = cx-e.clientX;
-    const dy = cy-e.clientY;
-    const dist = Math.hypot(dx,dy);
-    if(dist<160){
-      const angle=Math.atan2(dy,dx);
-      const speed=22;
-      let nx=r.left+Math.cos(angle)*speed;
-      let ny=r.top+Math.sin(angle)*speed;
-      nx=Math.max(0,Math.min(window.innerWidth-r.width,nx));
-      ny=Math.max(0,Math.min(window.innerHeight-r.height,ny));
-      p.style.left=nx+"px";
-      p.style.top=ny+"px";
-    }
+    const r=p.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=cx-e.clientX,dy=cy-e.clientY,dist=Math.hypot(dx,dy);
+    if(dist<160){const angle=Math.atan2(dy,dx),speed=22;let nx=r.left+Math.cos(angle)*speed,ny=r.top+Math.sin(angle)*speed;
+    nx=Math.max(0,Math.min(window.innerWidth-r.width,nx)); ny=Math.max(0,Math.min(window.innerHeight-r.height,ny)); p.style.left=nx+"px"; p.style.top=ny+"px";}
   });
 });
 
-// Lag popups
 function createPopups(count){
   for(let i=0;i<count;i++){
-    const p=document.createElement("div");
-    p.className="popup";
-    p.style.top=Math.random()*70+"vh";
-    p.style.left=Math.random()*70+"vw";
-    p.innerHTML=`<b>⚠️ WARNING</b><br><br>
-      Virus detected!<br>
-      Rickrolling now…<br><br>
-      <button onclick="this.parentElement.remove()">X</button>
-      <iframe width="240" height="135" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-    document.body.appendChild(p);
-    popups.push(p);
+    const p=document.createElement("div"); p.className="popup";
+    p.style.top=Math.random()*70+"vh"; p.style.left=Math.random()*70+"vw";
+    p.innerHTML=`<b>⚠️ WARNING</b><br><br>Virus detected!<br>Rickrolling now…<br><br>
+    <button onclick="this.parentElement.remove()">X</button>
+    <iframe width="240" height="135" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    document.body.appendChild(p); popups.push(p);
   }
 }
 
-// Fake shaking
-function startShaking(){
-  document.body.classList.add("shaking");
-  clearInterval(shakeTimer);
-  shakeTimer=setInterval(()=>{document.body.classList.toggle("shaking")},90);
+function startShaking(){document.body.classList.add("shaking"); clearInterval(shakeTimer); shakeTimer=setInterval(()=>{document.body.classList.toggle("shaking")},90);}
+function fakeLoading(){let progress=0; const bar=document.getElementById("bar"),status=document.getElementById("statusText"),ipText=document.getElementById("ipText"); ipText.innerHTML=""; clearInterval(progressTimer);
+  progressTimer=setInterval(()=>{progress+=Math.random()*9; if(progress>=100){progress=100; clearInterval(progressTimer);
+  const fakeIP=Math.floor(Math.random()*200+20)+"."+Math.floor(Math.random()*200)+"."+Math.floor(Math.random()*200)+"."+Math.floor(Math.random()*200);
+  status.innerHTML="Uploading files… 100%<br><br>📡 Locating IP…"; ipText.innerHTML=`<br>IP funnet: <b>${fakeIP}</b><br>(😂 bare tull)`;}
+  bar.style.width=progress+"%"; status.innerHTML=`Uploading files… ${Math.floor(progress)}%`;},220);
 }
 
-// Fake loading + IP
-function fakeLoading(){
-  let progress=0;
-  const bar=document.getElementById("bar");
-  const status=document.getElementById("statusText");
-  const ipText=document.getElementById("ipText");
-  ipText.innerHTML="";
-  clearInterval(progressTimer);
-  progressTimer=setInterval(()=>{
-    progress+=Math.random()*9;
-    if(progress>=100){
-      progress=100;
-      clearInterval(progressTimer);
-      const fakeIP=Math.floor(Math.random()*200+20)+"."+
-                   Math.floor(Math.random()*200)+"."+
-                   Math.floor(Math.random()*200)+"."+
-                   Math.floor(Math.random()*200);
-      status.innerHTML="Uploading files… 100%<br><br>📡 Locating IP…";
-      ipText.innerHTML=`<br>IP funnet: <b>${fakeIP}</b><br>(😂 bare tull)`;
-    }
-    bar.style.width=progress+"%";
-    status.innerHTML=`Uploading files… ${Math.floor(progress)}%`;
-  },220);
-}
-
-// 🔢 Counter til 9999
-function startCounter(){
-  counterInterval=setInterval(()=>{
-    if(counterValue<9999){
-      counterValue++;
-      document.getElementById("counter").textContent=counterValue;
-    } else clearInterval(counterInterval);
-  },10);
-}
+// Counter
+function startCounter(){counterInterval=setInterval(()=>{if(counterValue<9999){counterValue++;document.getElementById("counter").textContent=counterValue;}else clearInterval(counterInterval);},10);}
 startCounter();
-
-// Klikk på counter → 3 Rickroll-videoer
 function counterClicked(){
-  const overlay=document.getElementById("rickOverlay");
-  overlay.innerHTML="";
-  for(let i=0;i<3;i++){
-    const f=document.createElement("iframe");
-    f.width="180"; f.height="100";
-    f.src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
-    f.frameBorder="0";
-    f.allow="autoplay; encrypted-media";
-    f.allowFullscreen=true;
-    overlay.appendChild(f);
-  }
+  const overlay=document.getElementById("rickOverlay"); overlay.innerHTML="";
+  for(let i=0;i<3;i++){const f=document.createElement("iframe"); f.width="180"; f.height="100"; f.src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0"; f.frameBorder="0"; f.allow="autoplay; encrypted-media"; f.allowFullscreen=true; overlay.appendChild(f);}
 }
 
-// 🛑 STOPP
+// Hemmelig ending – klikk STOPP 3 ganger
 function stopPrank(){
+  startStopClicks++;
+  if(startStopClicks>=3){
+    alert("🎉 YOU WIN FREE MONY! 🎉"); startStopClicks=0;
+  }
   document.getElementById("overlay").style.display="none";
   document.getElementById("bar").style.width="0%";
   document.getElementById("ipText").innerHTML="";
   document.getElementById("rickframe").src="";
   document.getElementById("rickOverlay").innerHTML="";
-  popups.forEach(p=>p.remove());
-  popups=[];
-  clearInterval(progressTimer);
-  clearInterval(shakeTimer);
-  clearInterval(counterInterval);
+  popups.forEach(p=>p.remove()); popups=[];
+  clearInterval(progressTimer); clearInterval(shakeTimer); clearInterval(counterInterval);
   document.body.classList.remove("shaking");
-  alert("😇 Prank ferdig. Du er trygg. Lovar.");
 }
 
 // ESC = STOPP
-document.addEventListener("keydown", e=>{
-  if(e.key==="Escape") stopPrank();
-});
+document.addEventListener("keydown", e=>{if(e.key==="Escape") stopPrank();});
 </script>
 
 </body>
 </html>
+
