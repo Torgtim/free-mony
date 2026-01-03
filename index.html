@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -12,8 +15,9 @@
     text-align: center;
     margin: 0;
     overflow: hidden;
+    transition: transform 0.1s linear;
   }
-  h1 { margin-top: 18vh; font-size: 3rem; }
+  h1 { margin-top: 15vh; font-size: 3rem; }
   p { opacity: .9; }
   .btn {
     font-size: 1.2rem;
@@ -23,6 +27,20 @@
     border: none;
     cursor: pointer;
   }
+  .red-btn {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8rem;
+    padding: 24px 40px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+    border-radius: 12px;
+  }
   .overlay {
     position: fixed;
     inset: 0;
@@ -30,7 +48,7 @@
     color: #ff4d4d;
     display: none;
     z-index: 999;
-    padding-top: 18vh;
+    padding-top: 15vh;
     font-size: 1.2rem;
   }
   .bar-wrap {
@@ -50,7 +68,7 @@
     border: 2px solid #ff4d4d;
     color: white;
     padding: 16px;
-    width: 260px;
+    width: 280px;
     z-index: 998;
     transition: transform .15s linear;
   }
@@ -67,13 +85,13 @@
   }
   @keyframes shake {
     0% { transform: translate(0,0); }
-    20% { transform: translate(-6px, 3px); }
-    40% { transform: translate(6px, -3px); }
-    60% { transform: translate(-6px, -3px); }
-    80% { transform: translate(6px, 3px); }
+    20% { transform: translate(-8px, 4px); }
+    40% { transform: translate(8px, -4px); }
+    60% { transform: translate(-8px, -4px); }
+    80% { transform: translate(8px, 4px); }
     100% { transform: translate(0,0); }
   }
-  .shaking { animation: shake .18s infinite; }
+  .shaking { animation: shake .12s infinite; }
 </style>
 </head>
 <body>
@@ -81,9 +99,12 @@
 <h1>💸 FREE MONY 💸</h1>
 <p>100 % legit. Ingen scam. <b>Lovar.</b></p>
 
-<button class="btn" onclick="startPrank(4)">CLICK HERE</button>
-<button class="btn" onclick="startPrank(7)">DOUBLE MONY</button>
+<button class="btn" onclick="startPrank(3)">CLICK HERE</button>
+<button class="btn" onclick="startPrank(6)">DOUBLE MONY</button>
 <button class="btn" onclick="startPrank(12)">ULTRA FREE</button>
+
+<!-- Rød knapp midt -->
+<button class="red-btn" onclick="ultimateChaos()">💥 TOTAL MONY 💥</button>
 
 <div id="overlay" class="overlay">
   <div id="statusText">
@@ -97,7 +118,6 @@
 
   <div id="ipText"></div>
 
-  <!-- Rickroll på siden -->
   <div style="margin-top:18px;">
     <iframe id="rickframe"
       width="320" height="180"
@@ -117,69 +137,42 @@ let popups = [];
 let progressTimer = null;
 let shakeTimer = null;
 
+// 🟢 Standard mony-knapper
 function startPrank(rickCount) {
-  // Rickroll-faner
   for (let i = 0; i < rickCount; i++) {
     window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank");
   }
-
-  // Overlay
   document.getElementById("overlay").style.display = "block";
+  document.getElementById("rickframe").src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
+  createPopups(5);
+  startShaking();
+  fakeLoading();
+}
 
-  // Rickroll på siden (starter etter klikk)
-  document.getElementById("rickframe").src =
-    "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
+// 🔴 Rød knapp – TOTAL CHAOS
+function ultimateChaos() {
+  document.getElementById("overlay").style.display = "block";
+  document.getElementById("rickframe").src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
 
-  // Lag flyktende popups
-  for (let i = 0; i < 5; i++) {
-    const p = document.createElement("div");
-    p.className = "popup";
-    p.style.top = Math.random() * 70 + "vh";
-    p.style.left = Math.random() * 70 + "vw";
-    p.innerHTML = `
-      <b>⚠️ WARNING</b><br><br>
-      Virus detected!<br>
-      Trying to close… nope 😈<br><br>
-      <button onclick="this.parentElement.remove()">X</button>
-    `;
-    document.body.appendChild(p);
-    popups.push(p);
-  }
+  // Lage mange popups
+  createPopups(20);
 
-  // Risting
+  // Start shaking hele siden maks
   document.body.classList.add("shaking");
   clearInterval(shakeTimer);
   shakeTimer = setInterval(() => {
     document.body.classList.toggle("shaking");
-  }, 900);
+  }, 60);
 
-  // Fake loading + IP
-  let progress = 0;
-  const bar = document.getElementById("bar");
-  const status = document.getElementById("statusText");
-  const ipText = document.getElementById("ipText");
-  ipText.innerHTML = "";
+  // Auto-open mange Rickroll faner
+  for (let i = 0; i < 10; i++) {
+    window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank");
+  }
 
-  clearInterval(progressTimer);
-  progressTimer = setInterval(() => {
-    progress += Math.random() * 9;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(progressTimer);
-      const fakeIP =
-        Math.floor(Math.random()*200+20) + "." +
-        Math.floor(Math.random()*200) + "." +
-        Math.floor(Math.random()*200) + "." +
-        Math.floor(Math.random()*200);
-      status.innerHTML = "Uploading files… 100%<br><br>📡 Locating IP…";
-      ipText.innerHTML = `<br>IP funnet: <b>${fakeIP}</b><br>(😂 bare tull)`;
-    }
-    bar.style.width = progress + "%";
-    status.innerHTML = `Uploading files… ${Math.floor(progress)}%`;
-  }, 220);
+  fakeLoading();
 }
 
-// 🐭 Popups flykter fra musen
+// 🐭 Popups som løper fra musen
 document.addEventListener("mousemove", e => {
   popups.forEach(p => {
     const r = p.getBoundingClientRect();
@@ -189,21 +182,71 @@ document.addEventListener("mousemove", e => {
     const dy = cy - e.clientY;
     const dist = Math.hypot(dx, dy);
 
-    if (dist < 140) {
+    if (dist < 160) {
       const angle = Math.atan2(dy, dx);
-      const speed = 18;
+      const speed = 22;
       let nx = r.left + Math.cos(angle) * speed;
       let ny = r.top + Math.sin(angle) * speed;
-
-      // Hold på skjermen
       nx = Math.max(0, Math.min(window.innerWidth - r.width, nx));
       ny = Math.max(0, Math.min(window.innerHeight - r.height, ny));
-
       p.style.left = nx + "px";
       p.style.top  = ny + "px";
     }
   });
 });
+
+// Lag popups
+function createPopups(count) {
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement("div");
+    p.className = "popup";
+    p.style.top = Math.random() * 70 + "vh";
+    p.style.left = Math.random() * 70 + "vw";
+    p.innerHTML = `
+      <b>⚠️ WARNING</b><br><br>
+      Virus detected!<br>
+      Rickrolling now…<br><br>
+      <button onclick="this.parentElement.remove()">X</button>
+      <iframe width="240" height="135" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    `;
+    document.body.appendChild(p);
+    popups.push(p);
+  }
+}
+
+// Fake shaking
+function startShaking() {
+  document.body.classList.add("shaking");
+  clearInterval(shakeTimer);
+  shakeTimer = setInterval(() => {
+    document.body.classList.toggle("shaking");
+  }, 90);
+}
+
+// Fake loading + IP
+function fakeLoading() {
+  let progress = 0;
+  const bar = document.getElementById("bar");
+  const status = document.getElementById("statusText");
+  const ipText = document.getElementById("ipText");
+  ipText.innerHTML = "";
+  clearInterval(progressTimer);
+  progressTimer = setInterval(() => {
+    progress += Math.random() * 9;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(progressTimer);
+      const fakeIP = Math.floor(Math.random()*200+20) + "." +
+                     Math.floor(Math.random()*200) + "." +
+                     Math.floor(Math.random()*200) + "." +
+                     Math.floor(Math.random()*200);
+      status.innerHTML = "Uploading files… 100%<br><br>📡 Locating IP…";
+      ipText.innerHTML = `<br>IP funnet: <b>${fakeIP}</b><br>(😂 bare tull)`;
+    }
+    bar.style.width = progress + "%";
+    status.innerHTML = `Uploading files… ${Math.floor(progress)}%`;
+  }, 220);
+}
 
 // 🛑 STOPP
 function stopPrank() {
