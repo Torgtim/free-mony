@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -64,6 +65,18 @@
     cursor: pointer;
     z-index: 1000;
   }
+  /* RISTE-ANIMASJON */
+  @keyframes shake {
+    0% { transform: translate(0,0); }
+    20% { transform: translate(-6px, 3px); }
+    40% { transform: translate(6px, -3px); }
+    60% { transform: translate(-6px, -3px); }
+    80% { transform: translate(6px, 3px); }
+    100% { transform: translate(0,0); }
+  }
+  .shaking {
+    animation: shake 0.18s infinite;
+  }
 </style>
 </head>
 <body>
@@ -71,10 +84,10 @@
 <h1>💸 FREE MONY 💸</h1>
 <p>100 % legit. Ingen scam. <b>Lovar.</b></p>
 
-<!-- Flere Rickroll-knapper 😈 -->
+<!-- Flere Rickroll-knapper -->
 <button class="btn" onclick="startPrank(3)">CLICK HERE</button>
-<button class="btn" onclick="startPrank(5)">DOUBLE MONY</button>
-<button class="btn" onclick="startPrank(8)">ULTRA FREE</button>
+<button class="btn" onclick="startPrank(6)">DOUBLE MONY</button>
+<button class="btn" onclick="startPrank(10)">ULTRA FREE</button>
 
 <div id="overlay" class="overlay">
   <div id="statusText">
@@ -87,6 +100,18 @@
   </div>
 
   <div id="ipText"></div>
+
+  <!-- Rickroll inne på siden (starter etter klikk) -->
+  <div style="margin-top:18px;">
+    <iframe id="rickframe"
+      width="320" height="180"
+      src=""
+      title="Rickroll"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  </div>
 </div>
 
 <div class="exit" onclick="stopPrank()">STOPP PRANK</div>
@@ -94,9 +119,9 @@
 <script>
 let popups = [];
 let progressTimer = null;
+let shakeTimer = null;
 
 function startPrank(rickCount) {
-
   // Rickroll-faner (så mange browseren tillater)
   for (let i = 0; i < rickCount; i++) {
     window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank");
@@ -105,6 +130,10 @@ function startPrank(rickCount) {
   // Overlay ON
   const overlay = document.getElementById("overlay");
   overlay.style.display = "block";
+
+  // Start Rickroll INNE på siden (autoplay etter klikk)
+  document.getElementById("rickframe").src =
+    "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
 
   // Fake popups
   for (let i = 0; i < 4; i++) {
@@ -122,7 +151,14 @@ function startPrank(rickCount) {
     popups.push(p);
   }
 
-  // Fake loading bar
+  // Vinduer som RISTER
+  document.body.classList.add("shaking");
+  clearInterval(shakeTimer);
+  shakeTimer = setInterval(() => {
+    document.body.classList.toggle("shaking");
+  }, 900);
+
+  // Fake loading bar + IP
   let progress = 0;
   const bar = document.getElementById("bar");
   const status = document.getElementById("statusText");
@@ -131,12 +167,11 @@ function startPrank(rickCount) {
 
   clearInterval(progressTimer);
   progressTimer = setInterval(() => {
-    progress += Math.random() * 8;
+    progress += Math.random() * 9;
     if (progress >= 100) {
       progress = 100;
       clearInterval(progressTimer);
 
-      // Fake IP (kun tull)
       const fakeIP =
         Math.floor(Math.random()*200+20) + "." +
         Math.floor(Math.random()*200) + "." +
@@ -156,9 +191,12 @@ function stopPrank() {
   document.getElementById("overlay").style.display = "none";
   document.getElementById("bar").style.width = "0%";
   document.getElementById("ipText").innerHTML = "";
+  document.getElementById("rickframe").src = "";
   popups.forEach(p => p.remove());
   popups = [];
   clearInterval(progressTimer);
+  clearInterval(shakeTimer);
+  document.body.classList.remove("shaking");
   alert("😇 Prank ferdig. Du er trygg. Lovar.");
 }
 
