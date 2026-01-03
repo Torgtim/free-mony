@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -53,6 +52,7 @@
     padding: 16px;
     width: 260px;
     z-index: 998;
+    transition: transform .15s linear;
   }
   .exit {
     position: fixed;
@@ -65,7 +65,6 @@
     cursor: pointer;
     z-index: 1000;
   }
-  /* RISTE-ANIMASJON */
   @keyframes shake {
     0% { transform: translate(0,0); }
     20% { transform: translate(-6px, 3px); }
@@ -74,9 +73,7 @@
     80% { transform: translate(6px, 3px); }
     100% { transform: translate(0,0); }
   }
-  .shaking {
-    animation: shake 0.18s infinite;
-  }
+  .shaking { animation: shake .18s infinite; }
 </style>
 </head>
 <body>
@@ -84,10 +81,9 @@
 <h1>💸 FREE MONY 💸</h1>
 <p>100 % legit. Ingen scam. <b>Lovar.</b></p>
 
-<!-- Flere Rickroll-knapper -->
-<button class="btn" onclick="startPrank(3)">CLICK HERE</button>
-<button class="btn" onclick="startPrank(6)">DOUBLE MONY</button>
-<button class="btn" onclick="startPrank(10)">ULTRA FREE</button>
+<button class="btn" onclick="startPrank(4)">CLICK HERE</button>
+<button class="btn" onclick="startPrank(7)">DOUBLE MONY</button>
+<button class="btn" onclick="startPrank(12)">ULTRA FREE</button>
 
 <div id="overlay" class="overlay">
   <div id="statusText">
@@ -101,7 +97,7 @@
 
   <div id="ipText"></div>
 
-  <!-- Rickroll inne på siden (starter etter klikk) -->
+  <!-- Rickroll på siden -->
   <div style="margin-top:18px;">
     <iframe id="rickframe"
       width="320" height="180"
@@ -122,21 +118,20 @@ let progressTimer = null;
 let shakeTimer = null;
 
 function startPrank(rickCount) {
-  // Rickroll-faner (så mange browseren tillater)
+  // Rickroll-faner
   for (let i = 0; i < rickCount; i++) {
     window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank");
   }
 
-  // Overlay ON
-  const overlay = document.getElementById("overlay");
-  overlay.style.display = "block";
+  // Overlay
+  document.getElementById("overlay").style.display = "block";
 
-  // Start Rickroll INNE på siden (autoplay etter klikk)
+  // Rickroll på siden (starter etter klikk)
   document.getElementById("rickframe").src =
     "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
 
-  // Fake popups
-  for (let i = 0; i < 4; i++) {
+  // Lag flyktende popups
+  for (let i = 0; i < 5; i++) {
     const p = document.createElement("div");
     p.className = "popup";
     p.style.top = Math.random() * 70 + "vh";
@@ -144,21 +139,21 @@ function startPrank(rickCount) {
     p.innerHTML = `
       <b>⚠️ WARNING</b><br><br>
       Virus detected!<br>
-      Sending data…<br><br>
+      Trying to close… nope 😈<br><br>
       <button onclick="this.parentElement.remove()">X</button>
     `;
     document.body.appendChild(p);
     popups.push(p);
   }
 
-  // Vinduer som RISTER
+  // Risting
   document.body.classList.add("shaking");
   clearInterval(shakeTimer);
   shakeTimer = setInterval(() => {
     document.body.classList.toggle("shaking");
   }, 900);
 
-  // Fake loading bar + IP
+  // Fake loading + IP
   let progress = 0;
   const bar = document.getElementById("bar");
   const status = document.getElementById("statusText");
@@ -171,13 +166,11 @@ function startPrank(rickCount) {
     if (progress >= 100) {
       progress = 100;
       clearInterval(progressTimer);
-
       const fakeIP =
         Math.floor(Math.random()*200+20) + "." +
         Math.floor(Math.random()*200) + "." +
         Math.floor(Math.random()*200) + "." +
         Math.floor(Math.random()*200);
-
       status.innerHTML = "Uploading files… 100%<br><br>📡 Locating IP…";
       ipText.innerHTML = `<br>IP funnet: <b>${fakeIP}</b><br>(😂 bare tull)`;
     }
@@ -186,7 +179,33 @@ function startPrank(rickCount) {
   }, 220);
 }
 
-// 🛑 PANIC EXIT
+// 🐭 Popups flykter fra musen
+document.addEventListener("mousemove", e => {
+  popups.forEach(p => {
+    const r = p.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const dx = cx - e.clientX;
+    const dy = cy - e.clientY;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < 140) {
+      const angle = Math.atan2(dy, dx);
+      const speed = 18;
+      let nx = r.left + Math.cos(angle) * speed;
+      let ny = r.top + Math.sin(angle) * speed;
+
+      // Hold på skjermen
+      nx = Math.max(0, Math.min(window.innerWidth - r.width, nx));
+      ny = Math.max(0, Math.min(window.innerHeight - r.height, ny));
+
+      p.style.left = nx + "px";
+      p.style.top  = ny + "px";
+    }
+  });
+});
+
+// 🛑 STOPP
 function stopPrank() {
   document.getElementById("overlay").style.display = "none";
   document.getElementById("bar").style.width = "0%";
